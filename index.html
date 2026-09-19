@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Indicações do Profissional - Guia de Produtos</title>
+  <!-- Fonte Google Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <style>
+    /* ===================================================
+       VARIAVEIS DE CORES E CORES DAS CATEGORIAS
+    =================================================== */
+    :root {
+      --bg-dark: #121214;
+      --card-bg: #1e1e24;
+      --text-main: #ffffff;
+      --text-muted: #a0a0b0;
+      
+      /* Cores das Categorias */
+      --color-pedreiro: #ffcc00;       /* Amarelo */
+      --color-pedreiro-bg: #111111;    /* Preto para contraste */
+      --color-hidraulica: #2196f3;     /* Azul */
+      --color-jardinagem: #4caf50;     /* Verde */
+      --color-eletrica: #f44336;       /* Vermelho */
+      --color-pintura: #9c27b0;        /* Roxo Vibrante */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px 15px;
+    }
+
+    /* Container Principal */
+    .app-container {
+      width: 100%;
+      max-width: 500px; /* Estilo aplicativo mobile-first */
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Cabecalho */
+    header {
+      text-align: center;
+      padding: 10px 0 10px 0;
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    /* Grid de Cards Principais */
+    .categories-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .category-card {
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .category-card:hover, .category-card:active {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+
+    .category-info h2 {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .category-info p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .category-icon {
+      font-size: 1.8rem;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    /* Temas Específicos dos Cards da Home */
+    .card-pedreiro {
+      border-color: var(--color-pedreiro);
+      background: linear-gradient(135deg, #1f1d14 0%, #121212 100%);
+    }
+    .card-pedreiro .category-icon { background: var(--color-pedreiro); color: #000; }
+    .card-pedreiro h2 { color: var(--color-pedreiro); }
+
+    .card-hidraulica {
+      border-color: rgba(33, 150, 243, 0.4);
+    }
+    .card-hidraulica .category-icon { background: rgba(33, 150, 243, 0.2); color: var(--color-hidraulica); }
+    .card-hidraulica h2 { color: var(--color-hidraulica); }
+
+    .card-jardinagem {
+      border-color: rgba(76, 175, 80, 0.4);
+    }
+    .card-jardinagem .category-icon { background: rgba(76, 175, 80, 0.2); color: var(--color-jardinagem); }
+    .card-jardinagem h2 { color: var(--color-jardinagem); }
+
+    .card-eletrica {
+      border-color: rgba(244, 67, 54, 0.4);
+    }
+    .card-eletrica .category-icon { background: rgba(244, 67, 54, 0.2); color: var(--color-eletrica); }
+    .card-eletrica h2 { color: var(--color-eletrica); }
+
+    .card-pintura {
+      border-color: rgba(156, 39, 176, 0.4);
+    }
+    .card-pintura .category-icon { background: rgba(156, 39, 176, 0.2); color: var(--color-pintura); }
+    .card-pintura h2 { color: var(--color-pintura); }
+
+    /* ===================================================
+       JANELAS SOBREPOSTAS (MODAIS ESTILO APP)
+    =================================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end; /* Abre estilo gaveta/app em dispositivos móveis */
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .app-window {
+      width: 100%;
+      max-width: 500px;
+      height: 90vh;
+      background-color: #18181c;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
+      overflow: hidden;
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+    }
+
+    .modal-overlay.active .app-window {
+      transform: translateY(0);
+    }
+
+    /* Modal Header com Mutações de Cor */
+    .window-header {
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      position: sticky;
+      top: 0;
+      background: #18181c;
+      z-index: 10;
+    }
+
+    .window-header h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .close-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #fff;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Conteúdo dos Produtos */
+    .window-body {
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .product-card {
+      background: #222228;
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .product-img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+      background-color: #333;
+      margin-bottom: 10px;
+    }
+
+    .product-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 6px;
+      color: #eaeaea;
+
+      /* Limita texto em 2 linhas */
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .product-link {
+      display: block;
+      text-align: center;
+      padding: 8px 10px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.8rem;
+      margin-top: 8px;
+      transition: filter 0.2s, transform 0.1s;
+    }
+
+    .product-link:active {
+      transform: scale(0.97);
+    }
+
+    /* ===================================================
+       ESTILIZAÇÃO DINÂMICA DAS JANELAS POR TEMA
+    =================================================== */
+
+    /* 1. Pedreiro (Amarelo e Preto) */
+    [data-theme="pedreiro"] .window-header {
+      border-bottom: 2px solid var(--color-pedreiro);
+    }
+    [data-theme="pedreiro"] h3 { color: var(--color-pedreiro); }
+    [data-theme="pedreiro"] .product-link {
+      background-color: var(--color-pedreiro);
+      color: #000000;
+    }
+
+    /* 2. Hidráulica (Azul) */
+    [data-theme="hidraulica"] .window-header {
+      border-bottom: 2px solid var(--color-hidraulica);
+    }
+    [data-theme="hidraulica"] h3 { color: var(--color-hidraulica); }
+    [data-theme="hidraulica"] .product-link {
+      background-color: var(--color-hidraulica);
+      color: #ffffff;
+    }
+
+    /* 3. Jardinagem / Chaveiro (Verde) */
+    [data-theme="jardinagem"] .window-header {
+      border-bottom: 2px solid var(--color-jardinagem);
+    }
+    [data-theme="jardinagem"] h3 { color: var(--color-jardinagem); }
+    [data-theme="jardinagem"] .product-link {
+      background-color: var(--color-jardinagem);
+      color: #ffffff;
+    }
+
+    /* 4. Elétrica (Vermelho) */
+    [data-theme="eletrica"] .window-header {
+      border-bottom: 2px solid var(--color-eletrica);
+    }
+    [data-theme="eletrica"] h3 { color: var(--color-eletrica); }
+    [data-theme="eletrica"] .product-link {
+      background-color: var(--color-eletrica);
+      color: #ffffff;
+    }
+
+    /* 5. Pintura (Roxo) */
+    [data-theme="pintura"] .window-header {
+      border-bottom: 2px solid var(--color-pintura);
+    }
+    [data-theme="pintura"] h3 { color: var(--color-pintura); }
+    [data-theme="pintura"] .product-link {
+      background-color: var(--color-pintura);
+      color: #ffffff;
+    }
+
+    /* Rodapé da Página */
+    footer {
+      margin-top: 25px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <header>
+      <h1>Guia de Recomendações</h1>
+      <p>Ferramentas e materiais indicados com o melhor custo-benefício</p>
+    </header>
+
+    <!-- GRID DE CATEGORIAS -->
+    <main class="categories-grid">
+
+      <!-- Card Pedreiro -->
+      <div class="category-card card-pedreiro" onclick="openWindow('modal-pedreiro')">
+        <div class="category-info">
+          <h2>Pedreiro & Obras</h2>
+          <p>Ferramentas, níveis e colheres</p>
+        </div>
+        <div class="category-icon">🛠️</div>
+      </div>
+
+      <!-- Card Hidráulica -->
+      <div class="category-card card-hidraulica" onclick="openWindow('modal-hidraulica')">
+        <div class="category-info">
+          <h2>Hidráulica</h2>
+          <p>Chaves, vedações e tubulações</p>
+        </div>
+        <div class="category-icon">💧</div>
+      </div>
+
+      <!-- Card Chaveiro e Jardinagem -->
+      <div class="category-card card-jardinagem" onclick="openWindow('modal-jardinagem')">
+        <div class="category-info">
+          <h2>Chaveiro & Jardinagem</h2>
+          <p>Tesouras, segredos e irrigação</p>
+        </div>
+        <div class="category-icon">🌿</div>
+      </div>
+
+      <!-- Card Elétrica -->
+      <div class="category-card card-eletrica" onclick="openWindow('modal-eletrica')">
+        <div class="category-info">
+          <h2>Elétrica</h2>
+          <p>Alicates, alicates crimp e medidores</p>
+        </div>
+        <div class="category-icon">⚡</div>
+      </div>
+
+      <!-- Card Pintura -->
+      <div class="category-card card-pintura" onclick="openWindow('modal-pintura')">
+        <div class="category-info">
+          <h2>Pintura</h2>
+          <p>Pincéis, rolos e pulverizadores</p>
+        </div>
+        <div class="category-icon">🎨</div>
+      </div>
+
+    </main>
+
+    <footer>
+      <p>© 2026 - Todos os direitos reservados. Links de Afiliados.</p>
+    </footer>
+  </div>
+
+
+  <!-- ===================================================
+       JANELAS MODAIS COM OS PRODUTOS (AFILIADOS)
+  =================================================== -->
+
+  <!-- 1. MODAL PEDREIRO (Amarelo e Preto) -->
+  <div class="modal-overlay" id="modal-pedreiro" data-theme="pedreiro" onclick="closeWindowOnBackdrop(event, 'modal-pedreiro')">
+    <div class="app-window">
+      <div class="window-header">
+        <h3>Serviços de Pedreiro</h3>
+        <button class="close-btn" onclick="closeWindow('modal-pedreiro')">✕</button>
+      </div>
+      <div class="window-body">
+        <div class="products-grid">
+          
+          <!-- Produto 1 -->
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto 1">
+            <div class="product-title">Nível a Laser 360 Graus Profesional</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <!-- Produto 2 -->
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto 2">
+            <div class="product-title">Colher de Pedreiro Inox Reforçada</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <!-- Produto 3 -->
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto 3">
+            <div class="product-title">Prumo de Face Zamac com Cordão</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <!-- Produto 4 -->
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto 4">
+            <div class="product-title">Desempenadeira Dentada Aço Inox</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <!-- Produto 5 -->
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto 5">
+            <div class="product-title">Marreta Octogonal 1kg com Cabo</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <!-- Produto 6 -->
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto 6">
+            <div class="product-title">Disco de Corte Diamantado 110mm</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 2. MODAL HIDRÁULICA (Azul) -->
+  <div class="modal-overlay" id="modal-hidraulica" data-theme="hidraulica" onclick="closeWindowOnBackdrop(event, 'modal-hidraulica')">
+    <div class="app-window">
+      <div class="window-header">
+        <h3>Serviços de Hidráulica</h3>
+        <button class="close-btn" onclick="closeWindow('modal-hidraulica')">✕</button>
+      </div>
+      <div class="window-body">
+        <div class="products-grid">
+          
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Chave Grifo Industrial 12 Polegadas</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Fita Veda Rosca 18mm x 50m Rolo</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Alicate Bomba d'Água 10 Pol</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Cortador de Tubos PVC e PPR</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Termofusora para Tubos de PPR</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Kit Anéis de Vedação O-Ring</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 3. MODAL JARDINAGEM E CHAVEIRO (Verde) -->
+  <div class="modal-overlay" id="modal-jardinagem" data-theme="jardinagem" onclick="closeWindowOnBackdrop(event, 'modal-jardinagem')">
+    <div class="app-window">
+      <div class="window-header">
+        <h3>Chaveiro & Jardinagem</h3>
+        <button class="close-btn" onclick="closeWindow('modal-jardinagem')">✕</button>
+      </div>
+      <div class="window-body">
+        <div class="products-grid">
+          
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Tesoura de Poda Profissional Tramontina</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Kit Gazuas para Abertura de Fechaduras</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Aparador de Cerca Viva a Bateria</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Lubrificante de Grafite em Pó</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Mangueira Mágica Expansível 30m</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Cadeado Segredo Tetra Chave 50mm</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 4. MODAL ELÉTRICA (Vermelho) -->
+  <div class="modal-overlay" id="modal-eletrica" data-theme="eletrica" onclick="closeWindowOnBackdrop(event, 'modal-eletrica')">
+    <div class="app-window">
+      <div class="window-header">
+        <h3>Serviços de Elétrica</h3>
+        <button class="close-btn" onclick="closeWindow('modal-eletrica')">✕</button>
+      </div>
+      <div class="window-body">
+        <div class="products-grid">
+          
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Alicate Decapador Automático</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Multímetro Digital Categori III Auto</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Alicate Amperímetro Digital</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Caneta Testadora de Tensão Sem Contato</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Kit Passa Fio com Alma de Aço 15m</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Fita Isolante Autofusão 19mm x 5m</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 5. MODAL PINTURA (Roxo Vibrante) -->
+  <div class="modal-overlay" id="modal-pintura" data-theme="pintura" onclick="closeWindowOnBackdrop(event, 'modal-pintura')">
+    <div class="app-window">
+      <div class="window-header">
+        <h3>Serviços de Pintura</h3>
+        <button class="close-btn" onclick="closeWindow('modal-pintura')">✕</button>
+      </div>
+      <div class="window-body">
+        <div class="products-grid">
+          
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Pistola Pulverizadora de Tinta Electric</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Rolo Antigota 23cm com Extensor</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Fita Crepe de Precisão Azul Pintura</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Kit Trinchas Macias Sintéticas</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Lixadeira Orbital Elétrica para Parede</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+          <div class="product-card">
+            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
+            <div class="product-title">Bandeja de Tinta Profissional Reforçada</div>
+            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT DE INTERAÇÃO -->
+  <script>
+    // Função para abrir a janela modal
+    function openWindow(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Impede o scroll no fundo
+      }
+    }
+
+    // Função para fechar a janela modal
+    function closeWindow(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto'; // Reativa o scroll no fundo
+      }
+    }
+
+    // Fecha se clicar no fundo escuro fora da janela
+    function closeWindowOnBackdrop(event, modalId) {
+      if (event.target.classList.contains('modal-overlay')) {
+        closeWindow(modalId);
+      }
+    }
+
+    // Suporte para fechar com a tecla ESC
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        const activeModals = document.querySelectorAll('.modal-overlay.active');
+        activeModals.forEach(modal => {
+          closeWindow(modal.id);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

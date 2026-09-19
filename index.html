@@ -2,734 +2,781 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Indicações do Profissional - Guia de Produtos</title>
-  <!-- Fonte Google Poppins -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>IndicaPro - Loja Oficial de Recomendações</title>
+  
+  <!-- Fonte Inter & Poppins Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
   
   <style>
     /* ===================================================
-       VARIAVEIS DE CORES E CORES DAS CATEGORIAS
+       SISTEMA DE CORES DINÂMICO & VARIÁVEIS CSS
     =================================================== */
     :root {
-      --bg-dark: #121214;
-      --card-bg: #1e1e24;
-      --text-main: #ffffff;
-      --text-muted: #a0a0b0;
-      
-      /* Cores das Categorias */
-      --color-pedreiro: #ffcc00;       /* Amarelo */
-      --color-pedreiro-bg: #111111;    /* Preto para contraste */
-      --color-hidraulica: #2196f3;     /* Azul */
-      --color-jardinagem: #4caf50;     /* Verde */
-      --color-eletrica: #f44336;       /* Vermelho */
-      --color-pintura: #9c27b0;        /* Roxo Vibrante */
+      --bg-main: #0B0E14;
+      --bg-surface: #151A23;
+      --bg-card: #1C2331;
+      --text-title: #FFFFFF;
+      --text-body: #94A3B8;
+      --border-color: rgba(255, 255, 255, 0.08);
+
+      /* Cores Padrão das Categorias */
+      --theme-pedreiro: #FFB800;   /* Amarelo Ouro */
+      --theme-pedreiro-bg: #000;
+      --theme-hidraulica: #0088FF; /* Azul Oceano */
+      --theme-jardinagem: #10B981; /* Verde Esmeralda */
+      --theme-eletrica: #FF3B30;   /* Vermelho Elétrico */
+      --theme-pintura: #B026FF;    /* Roxo Neon Vibrante */
+
+      /* Cor ativa no app (Padrão: Amarelo Pedreiro) */
+      --accent: var(--theme-pedreiro);
+      --accent-glow: rgba(255, 184, 0, 0.25);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Inter', sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
+      background-color: var(--bg-main);
+      color: var(--text-title);
       display: flex;
-      flex-direction: column;
-      align-items: center;
+      justify-content: center;
       min-height: 100vh;
-      padding: 20px 15px;
+      overflow-x: hidden;
     }
 
-    /* Container Principal */
-    .app-container {
+    /* Container do App Móvel */
+    .app-shell {
       width: 100%;
-      max-width: 500px; /* Estilo aplicativo mobile-first */
+      max-width: 480px; /* Simula tela de celular/app */
+      background-color: var(--bg-main);
+      min-height: 100vh;
+      padding-bottom: 90px; /* Espaço para menu inferior */
+      position: relative;
+      box-shadow: 0 0 50px rgba(0,0,0,0.8);
+    }
+
+    /* ===================================================
+       TOP APP BAR / HEADER
+    =================================================== */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11, 14, 20, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 20px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 12px;
+      transition: border-color 0.4s ease;
     }
 
-    /* Cabecalho */
-    header {
-      text-align: center;
-      padding: 10px 0 10px 0;
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    header h1 {
-      font-size: 1.6rem;
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-badge {
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      font-weight: 800;
+      font-size: 1.1rem;
+      transition: background 0.4s ease, box-shadow 0.4s ease;
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .brand-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.25rem;
       font-weight: 700;
       letter-spacing: -0.5px;
     }
 
-    header p {
+    .search-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-body);
       font-size: 0.9rem;
-      color: var(--text-muted);
-      margin-top: 5px;
     }
 
-    /* Grid de Cards Principais */
-    .categories-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
+    .search-box input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      width: 100%;
+      font-size: 0.85rem;
     }
-
-    .category-card {
-      background-color: var(--card-bg);
-      border-radius: 16px;
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      border: 2px solid transparent;
-      transition: all 0.25s ease;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .category-card:hover, .category-card:active {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-    }
-
-    .category-info h2 {
-      font-size: 1.2rem;
-      font-weight: 600;
-    }
-
-    .category-info p {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 3px;
-    }
-
-    .category-icon {
-      font-size: 1.8rem;
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-    }
-
-    /* Temas Específicos dos Cards da Home */
-    .card-pedreiro {
-      border-color: var(--color-pedreiro);
-      background: linear-gradient(135deg, #1f1d14 0%, #121212 100%);
-    }
-    .card-pedreiro .category-icon { background: var(--color-pedreiro); color: #000; }
-    .card-pedreiro h2 { color: var(--color-pedreiro); }
-
-    .card-hidraulica {
-      border-color: rgba(33, 150, 243, 0.4);
-    }
-    .card-hidraulica .category-icon { background: rgba(33, 150, 243, 0.2); color: var(--color-hidraulica); }
-    .card-hidraulica h2 { color: var(--color-hidraulica); }
-
-    .card-jardinagem {
-      border-color: rgba(76, 175, 80, 0.4);
-    }
-    .card-jardinagem .category-icon { background: rgba(76, 175, 80, 0.2); color: var(--color-jardinagem); }
-    .card-jardinagem h2 { color: var(--color-jardinagem); }
-
-    .card-eletrica {
-      border-color: rgba(244, 67, 54, 0.4);
-    }
-    .card-eletrica .category-icon { background: rgba(244, 67, 54, 0.2); color: var(--color-eletrica); }
-    .card-eletrica h2 { color: var(--color-eletrica); }
-
-    .card-pintura {
-      border-color: rgba(156, 39, 176, 0.4);
-    }
-    .card-pintura .category-icon { background: rgba(156, 39, 176, 0.2); color: var(--color-pintura); }
-    .card-pintura h2 { color: var(--color-pintura); }
 
     /* ===================================================
-       JANELAS SOBREPOSTAS (MODAIS ESTILO APP)
+       CATEGORIAS (SCROLL HORIZONTAL ESTILO APP)
     =================================================== */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(5px);
-      z-index: 1000;
+    .categories-bar {
       display: flex;
-      justify-content: center;
-      align-items: flex-end; /* Abre estilo gaveta/app em dispositivos móveis */
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 15px 20px 5px 20px;
+      scrollbar-width: none;
     }
+    .categories-bar::-webkit-scrollbar { display: none; }
 
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .app-window {
-      width: 100%;
-      max-width: 500px;
-      height: 90vh;
-      background-color: #18181c;
-      border-top-left-radius: 24px;
-      border-top-right-radius: 24px;
-      display: flex;
-      flex-direction: column;
-      transform: translateY(100%);
-      transition: transform 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
-      overflow: hidden;
-      box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
-    }
-
-    .modal-overlay.active .app-window {
-      transform: translateY(0);
-    }
-
-    /* Modal Header com Mutações de Cor */
-    .window-header {
-      padding: 20px;
+    .cat-chip {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      position: sticky;
-      top: 0;
-      background: #18181c;
-      z-index: 10;
+      gap: 6px;
+      transition: all 0.3s ease;
+      color: var(--text-body);
     }
 
-    .window-header h3 {
-      font-size: 1.3rem;
+    .cat-chip.active {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+      box-shadow: 0 4px 15px var(--accent-glow);
       font-weight: 700;
     }
 
-    .close-btn {
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      color: #fff;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      font-size: 1.2rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-
-    .close-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    /* Conteúdo dos Produtos */
-    .window-body {
+    /* ===================================================
+       BANNER EM DESTAQUE
+    =================================================== */
+    .hero-banner {
+      margin: 15px 20px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
       padding: 20px;
-      overflow-y: auto;
+      position: relative;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 8px;
+    }
+
+    .hero-banner::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 180px;
+      height: 180px;
+      background: var(--accent);
+      filter: blur(80px);
+      opacity: 0.3;
+      border-radius: 50%;
+      transition: background 0.5s ease;
+    }
+
+    .hero-tag {
+      background: rgba(255,255,255,0.1);
+      color: var(--accent);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 6px;
+      width: fit-content;
+      letter-spacing: 0.5px;
+      transition: color 0.4s ease;
+    }
+
+    .hero-banner h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .hero-banner p {
+      font-size: 0.8rem;
+      color: var(--text-body);
+    }
+
+    /* ===================================================
+       GRID DE PRODUTOS NA HOME
+    =================================================== */
+    .section-title {
+      padding: 10px 20px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-title span {
+      font-size: 0.8rem;
+      color: var(--accent);
+      cursor: pointer;
     }
 
     .products-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
+      gap: 14px;
+      padding: 0 20px;
     }
 
     .product-card {
-      background: #222228;
-      border-radius: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
       padding: 12px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      border: 1px solid rgba(255,255,255,0.05);
+      position: relative;
+      transition: transform 0.2s ease, border-color 0.3s ease;
     }
 
-    .product-img {
+    .product-card:active {
+      transform: scale(0.97);
+    }
+
+    .discount-badge {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      background: #E11D48;
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 3px 7px;
+      border-radius: 6px;
+      z-index: 2;
+    }
+
+    .product-img-wrap {
       width: 100%;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 8px;
-      background-color: #333;
+      height: 130px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
       margin-bottom: 10px;
+      position: relative;
     }
 
-    .product-title {
+    .product-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:hover .product-img-wrap img {
+      transform: scale(1.05);
+    }
+
+    .product-category-tag {
+      font-size: 0.65rem;
+      color: var(--text-body);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .product-name {
       font-size: 0.85rem;
       font-weight: 600;
+      color: #fff;
       line-height: 1.2;
-      margin-bottom: 6px;
-      color: #eaeaea;
-
-      /* Limita texto em 2 linhas */
       display: -webkit-box;
       -webkit-line-clamp: 2;
       line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      margin-bottom: 6px;
     }
 
-    .product-link {
-      display: block;
-      text-align: center;
-      padding: 8px 10px;
-      border-radius: 8px;
+    .rating {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.7rem;
+      color: #FFC107;
+      margin-bottom: 8px;
+    }
+
+    .rating span {
+      color: var(--text-body);
+    }
+
+    .price-container {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+
+    .old-price {
+      font-size: 0.7rem;
+      color: var(--text-body);
+      text-decoration: line-through;
+    }
+
+    .current-price {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .btn-buy {
+      background: var(--accent);
+      color: #000;
       text-decoration: none;
-      font-weight: 600;
-      font-size: 0.8rem;
-      margin-top: 8px;
-      transition: filter 0.2s, transform 0.1s;
-    }
-
-    .product-link:active {
-      transform: scale(0.97);
+      font-weight: 700;
+      font-size: 0.78rem;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      display: block;
+      box-shadow: 0 4px 12px var(--accent-glow);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
 
     /* ===================================================
-       ESTILIZAÇÃO DINÂMICA DAS JANELAS POR TEMA
+       JANELAS SOBREPOSTAS (BOTTOM SHEET MODAL APP)
     =================================================== */
-
-    /* 1. Pedreiro (Amarelo e Preto) */
-    [data-theme="pedreiro"] .window-header {
-      border-bottom: 2px solid var(--color-pedreiro);
-    }
-    [data-theme="pedreiro"] h3 { color: var(--color-pedreiro); }
-    [data-theme="pedreiro"] .product-link {
-      background-color: var(--color-pedreiro);
-      color: #000000;
-    }
-
-    /* 2. Hidráulica (Azul) */
-    [data-theme="hidraulica"] .window-header {
-      border-bottom: 2px solid var(--color-hidraulica);
-    }
-    [data-theme="hidraulica"] h3 { color: var(--color-hidraulica); }
-    [data-theme="hidraulica"] .product-link {
-      background-color: var(--color-hidraulica);
-      color: #ffffff;
+    .sheet-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
     }
 
-    /* 3. Jardinagem / Chaveiro (Verde) */
-    [data-theme="jardinagem"] .window-header {
-      border-bottom: 2px solid var(--color-jardinagem);
-    }
-    [data-theme="jardinagem"] h3 { color: var(--color-jardinagem); }
-    [data-theme="jardinagem"] .product-link {
-      background-color: var(--color-jardinagem);
-      color: #ffffff;
+    .sheet-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
     }
 
-    /* 4. Elétrica (Vermelho) */
-    [data-theme="eletrica"] .window-header {
-      border-bottom: 2px solid var(--color-eletrica);
-    }
-    [data-theme="eletrica"] h3 { color: var(--color-eletrica); }
-    [data-theme="eletrica"] .product-link {
-      background-color: var(--color-eletrica);
-      color: #ffffff;
-    }
-
-    /* 5. Pintura (Roxo) */
-    [data-theme="pintura"] .window-header {
-      border-bottom: 2px solid var(--color-pintura);
-    }
-    [data-theme="pintura"] h3 { color: var(--color-pintura); }
-    [data-theme="pintura"] .product-link {
-      background-color: var(--color-pintura);
-      color: #ffffff;
+    .sheet-window {
+      width: 100%;
+      max-width: 480px;
+      height: 88vh;
+      background: #12161F;
+      border-top-left-radius: 28px;
+      border-top-right-radius: 28px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
     }
 
-    /* Rodapé da Página */
-    footer {
-      margin-top: 25px;
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--text-muted);
+    .sheet-overlay.active .sheet-window {
+      transform: translateY(0);
+    }
+
+    .sheet-header {
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #12161F;
+      border-bottom: 2px solid var(--modal-accent, var(--accent));
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .sheet-header-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sheet-header-title h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--modal-accent, var(--accent));
+    }
+
+    .sheet-close-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: #fff;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sheet-body {
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Modal dinamico por tema */
+    [data-theme="pedreiro"] { --modal-accent: var(--theme-pedreiro); }
+    [data-theme="hidraulica"] { --modal-accent: var(--theme-hidraulica); }
+    [data-theme="jardinagem"] { --modal-accent: var(--theme-jardinagem); }
+    [data-theme="eletrica"] { --modal-accent: var(--theme-eletrica); }
+    [data-theme="pintura"] { --modal-accent: var(--theme-pintura); }
+
+    [data-theme] .btn-buy-modal {
+      background: var(--modal-accent);
+      color: #000;
+      font-weight: 700;
+    }
+    [data-theme="eletrica"] .btn-buy-modal,
+    [data-theme="hidraulica"] .btn-buy-modal,
+    [data-theme="pintura"] .btn-buy-modal {
+      color: #fff;
+    }
+
+    /* ===================================================
+       BARRA DE NAVEGAÇÃO INFERIOR (BOTTOM NAV)
+    =================================================== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 480px;
+      background: rgba(18, 22, 31, 0.92);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0 16px 0;
+      z-index: 90;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-body);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .nav-item.active {
+      color: var(--accent);
+    }
+
+    .nav-icon {
+      font-size: 1.3rem;
     }
   </style>
 </head>
 <body>
 
-  <div class="app-container">
-    <header>
-      <h1>Guia de Recomendações</h1>
-      <p>Ferramentas e materiais indicados com o melhor custo-benefício</p>
+  <div class="app-shell" id="appShell">
+
+    <!-- TOP HEADER -->
+    <header class="app-header">
+      <div class="header-top">
+        <div class="brand-logo">
+          <div class="brand-badge" id="brandBadge">⚡</div>
+          <div class="brand-title">IndicaPro</div>
+        </div>
+        <div style="font-size: 0.8rem; background: var(--bg-surface); padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border-color);">
+          🛒 Indicações
+        </div>
+      </div>
+
+      <!-- BUSCA -->
+      <div class="search-box">
+        🔍 <input type="text" placeholder="Buscar ferramentas, materiais e equipamentos..." />
+      </div>
     </header>
 
-    <!-- GRID DE CATEGORIAS -->
-    <main class="categories-grid">
+    <!-- BARRA DE CATEGORIAS (Muda a cor do app ao clicar) -->
+    <div class="categories-bar">
+      <div class="cat-chip active" onclick="switchTheme('pedreiro', this)">🛠️ Pedreiro</div>
+      <div class="cat-chip" onclick="switchTheme('hidraulica', this)">💧 Hidráulica</div>
+      <div class="cat-chip" onclick="switchTheme('jardinagem', this)">🌿 Jardinagem</div>
+      <div class="cat-chip" onclick="switchTheme('eletrica', this)">⚡ Elétrica</div>
+      <div class="cat-chip" onclick="switchTheme('pintura', this)">🎨 Pintura</div>
+    </div>
 
-      <!-- Card Pedreiro -->
-      <div class="category-card card-pedreiro" onclick="openWindow('modal-pedreiro')">
-        <div class="category-info">
-          <h2>Pedreiro & Obras</h2>
-          <p>Ferramentas, níveis e colheres</p>
-        </div>
-        <div class="category-icon">🛠️</div>
-      </div>
+    <!-- BANNER DE DESTAQUE DINÂMICO -->
+    <div class="hero-banner">
+      <div class="hero-tag" id="heroTag">SELEÇÃO RECOMENDADA</div>
+      <h2 id="heroTitle">Ferramentas de Pedreiro & Obras</h2>
+      <p>Os produtos mais duráveis e bem avaliados pelos profissionais.</p>
+    </div>
 
-      <!-- Card Hidráulica -->
-      <div class="category-card card-hidraulica" onclick="openWindow('modal-hidraulica')">
-        <div class="category-info">
-          <h2>Hidráulica</h2>
-          <p>Chaves, vedações e tubulações</p>
-        </div>
-        <div class="category-icon">💧</div>
-      </div>
+    <!-- TÍTULO DE SESSÃO -->
+    <div class="section-title">
+      <h3 id="sectionTitle">Mais Vendidos</h3>
+      <span onclick="openModalCurrent()">Ver todos os 6 ➔</span>
+    </div>
 
-      <!-- Card Chaveiro e Jardinagem -->
-      <div class="category-card card-jardinagem" onclick="openWindow('modal-jardinagem')">
-        <div class="category-info">
-          <h2>Chaveiro & Jardinagem</h2>
-          <p>Tesouras, segredos e irrigação</p>
-        </div>
-        <div class="category-icon">🌿</div>
-      </div>
+    <!-- GRID DE PRODUTOS PRINCIPAIS DA HOME -->
+    <div class="products-grid" id="mainProductsGrid">
+      <!-- Injetado Dinamicamente via JS -->
+    </div>
 
-      <!-- Card Elétrica -->
-      <div class="category-card card-eletrica" onclick="openWindow('modal-eletrica')">
-        <div class="category-info">
-          <h2>Elétrica</h2>
-          <p>Alicates, alicates crimp e medidores</p>
-        </div>
-        <div class="category-icon">⚡</div>
-      </div>
-
-      <!-- Card Pintura -->
-      <div class="category-card card-pintura" onclick="openWindow('modal-pintura')">
-        <div class="category-info">
-          <h2>Pintura</h2>
-          <p>Pincéis, rolos e pulverizadores</p>
-        </div>
-        <div class="category-icon">🎨</div>
-      </div>
-
-    </main>
-
-    <footer>
-      <p>© 2026 - Todos os direitos reservados. Links de Afiliados.</p>
-    </footer>
   </div>
+
+  <!-- ===================================================
+       JANELA SOBREPOSTA (MODAL ESTILO APP BOTTOM SHEET)
+  =================================================== -->
+  <div class="sheet-overlay" id="sheetModal" onclick="closeModalOnBackdrop(event)">
+    <div class="sheet-window">
+      <div class="sheet-header">
+        <div class="sheet-header-title">
+          <span id="modalIcon" style="font-size: 1.4rem;">🛠️</span>
+          <h3 id="modalCategoryTitle">Serviços de Pedreiro</h3>
+        </div>
+        <button class="sheet-close-btn" onclick="closeModal()">✕</button>
+      </div>
+      
+      <div class="sheet-body">
+        <p style="font-size: 0.8rem; color: var(--text-body);">
+          Confira a lista completa dos 6 melhores produtos selecionados com desconto direto do fornecedor:
+        </p>
+
+        <div class="products-grid" id="modalProductsGrid">
+          <!-- 6 Produtos por Categoria inseridos via JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MENU INFERIOR FIXO ESTILO APP -->
+  <nav class="bottom-nav">
+    <div class="nav-item active">
+      <span class="nav-icon">🏠</span>
+      <span>Início</span>
+    </div>
+    <div class="nav-item" onclick="openModalCurrent()">
+      <span class="nav-icon">📦</span>
+      <span>Produtos</span>
+    </div>
+    <div class="nav-item" onclick="alert('Link do seu WhatsApp de Atendimento')">
+      <span class="nav-icon">💬</span>
+      <span>Suporte</span>
+    </div>
+  </nav>
 
 
   <!-- ===================================================
-       JANELAS MODAIS COM OS PRODUTOS (AFILIADOS)
+       JAVASCRIPT DADOS & LÓGICA DO APP
   =================================================== -->
-
-  <!-- 1. MODAL PEDREIRO (Amarelo e Preto) -->
-  <div class="modal-overlay" id="modal-pedreiro" data-theme="pedreiro" onclick="closeWindowOnBackdrop(event, 'modal-pedreiro')">
-    <div class="app-window">
-      <div class="window-header">
-        <h3>Serviços de Pedreiro</h3>
-        <button class="close-btn" onclick="closeWindow('modal-pedreiro')">✕</button>
-      </div>
-      <div class="window-body">
-        <div class="products-grid">
-          
-          <!-- Produto 1 -->
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto 1">
-            <div class="product-title">Nível a Laser 360 Graus Profesional</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <!-- Produto 2 -->
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto 2">
-            <div class="product-title">Colher de Pedreiro Inox Reforçada</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <!-- Produto 3 -->
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto 3">
-            <div class="product-title">Prumo de Face Zamac com Cordão</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <!-- Produto 4 -->
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto 4">
-            <div class="product-title">Desempenadeira Dentada Aço Inox</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <!-- Produto 5 -->
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto 5">
-            <div class="product-title">Marreta Octogonal 1kg com Cabo</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <!-- Produto 6 -->
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto 6">
-            <div class="product-title">Disco de Corte Diamantado 110mm</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- 2. MODAL HIDRÁULICA (Azul) -->
-  <div class="modal-overlay" id="modal-hidraulica" data-theme="hidraulica" onclick="closeWindowOnBackdrop(event, 'modal-hidraulica')">
-    <div class="app-window">
-      <div class="window-header">
-        <h3>Serviços de Hidráulica</h3>
-        <button class="close-btn" onclick="closeWindow('modal-hidraulica')">✕</button>
-      </div>
-      <div class="window-body">
-        <div class="products-grid">
-          
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Chave Grifo Industrial 12 Polegadas</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Fita Veda Rosca 18mm x 50m Rolo</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Alicate Bomba d'Água 10 Pol</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Cortador de Tubos PVC e PPR</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Termofusora para Tubos de PPR</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Kit Anéis de Vedação O-Ring</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- 3. MODAL JARDINAGEM E CHAVEIRO (Verde) -->
-  <div class="modal-overlay" id="modal-jardinagem" data-theme="jardinagem" onclick="closeWindowOnBackdrop(event, 'modal-jardinagem')">
-    <div class="app-window">
-      <div class="window-header">
-        <h3>Chaveiro & Jardinagem</h3>
-        <button class="close-btn" onclick="closeWindow('modal-jardinagem')">✕</button>
-      </div>
-      <div class="window-body">
-        <div class="products-grid">
-          
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Tesoura de Poda Profissional Tramontina</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Kit Gazuas para Abertura de Fechaduras</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Aparador de Cerca Viva a Bateria</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Lubrificante de Grafite em Pó</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Mangueira Mágica Expansível 30m</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Cadeado Segredo Tetra Chave 50mm</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- 4. MODAL ELÉTRICA (Vermelho) -->
-  <div class="modal-overlay" id="modal-eletrica" data-theme="eletrica" onclick="closeWindowOnBackdrop(event, 'modal-eletrica')">
-    <div class="app-window">
-      <div class="window-header">
-        <h3>Serviços de Elétrica</h3>
-        <button class="close-btn" onclick="closeWindow('modal-eletrica')">✕</button>
-      </div>
-      <div class="window-body">
-        <div class="products-grid">
-          
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Alicate Decapador Automático</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Multímetro Digital Categori III Auto</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Alicate Amperímetro Digital</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Caneta Testadora de Tensão Sem Contato</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Kit Passa Fio com Alma de Aço 15m</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Fita Isolante Autofusão 19mm x 5m</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- 5. MODAL PINTURA (Roxo Vibrante) -->
-  <div class="modal-overlay" id="modal-pintura" data-theme="pintura" onclick="closeWindowOnBackdrop(event, 'modal-pintura')">
-    <div class="app-window">
-      <div class="window-header">
-        <h3>Serviços de Pintura</h3>
-        <button class="close-btn" onclick="closeWindow('modal-pintura')">✕</button>
-      </div>
-      <div class="window-body">
-        <div class="products-grid">
-          
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Pistola Pulverizadora de Tinta Electric</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Rolo Antigota 23cm com Extensor</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Fita Crepe de Precisão Azul Pintura</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Kit Trinchas Macias Sintéticas</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Lixadeira Orbital Elétrica para Parede</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-          <div class="product-card">
-            <img class="product-img" src="https://via.placeholder.com/200" alt="Produto">
-            <div class="product-title">Bandeja de Tinta Profissional Reforçada</div>
-            <a href="https://SEU_LINK_DE_AFILIADO_AQUI" target="_blank" rel="noopener" class="product-link">Ver Oferta</a>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- JAVASCRIPT DE INTERAÇÃO -->
   <script>
-    // Função para abrir a janela modal
-    function openWindow(modalId) {
-      const modal = document.getElementById(modalId);
-      if (modal) {
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden'; // Impede o scroll no fundo
+    // BASE DE DADOS DOS PRODUTOS (6 por categoria com imagens reais em HD)
+    const storeData = {
+      pedreiro: {
+        title: "Pedreiro & Obras",
+        icon: "🛠️",
+        color: "#FFB800",
+        glow: "rgba(255, 184, 0, 0.3)",
+        products: [
+          { name: "Nível a Laser 360° Profissional 12 Linhas", oldPrice: "R$ 389,00", price: "R$ 249,90", discount: "-35%", img: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Colher de Pedreiro Canto Quadrado 9'' Inox", oldPrice: "R$ 65,00", price: "R$ 42,90", discount: "-33%", img: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Marreta Octogonal 1kg Cabo Fibra Emborrachado", oldPrice: "R$ 89,00", price: "R$ 59,90", discount: "-32%", img: "https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Prumo de Face Zamac 500g com Cordão", oldPrice: "R$ 45,00", price: "R$ 29,90", discount: "-33%", img: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Desempenadeira Dentada Aço Inox 28x12cm", oldPrice: "R$ 78,00", price: "R$ 49,90", discount: "-36%", img: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Disco Diamantado Turbo 110mm para Piso", oldPrice: "R$ 39,00", price: "R$ 24,90", discount: "-36%", img: "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400&q=80", link: "https://SEU_LINK_AFILIADO" }
+        ]
+      },
+      hidraulica: {
+        title: "Serviços de Hidráulica",
+        icon: "💧",
+        color: "#0088FF",
+        glow: "rgba(0, 136, 255, 0.3)",
+        products: [
+          { name: "Chave Grifo Regulável 12 Polegadas Heavy Duty", oldPrice: "R$ 120,00", price: "R$ 79,90", discount: "-33%", img: "https://images.unsplash.com/photo-1581092162384-8987c1d64718?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Alicate Bomba d'Água 10 Pol Ranhurado", oldPrice: "R$ 95,00", price: "R$ 64,90", discount: "-31%", img: "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Cortador de Tubos PVC e PPR até 42mm", oldPrice: "R$ 75,00", price: "R$ 49,90", discount: "-33%", img: "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Fita Veda Rosca 18mm x 50 Metros (Kit 5 Unid)", oldPrice: "R$ 40,00", price: "R$ 24,90", discount: "-37%", img: "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Termofusora PPR 800W para Tubulações", oldPrice: "R$ 310,00", price: "R$ 199,90", discount: "-35%", img: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Maleta de Anéis O-Ring Vedação 225 Peças", oldPrice: "R$ 65,00", price: "R$ 39,90", discount: "-38%", img: "https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?w=400&q=80", link: "https://SEU_LINK_AFILIADO" }
+        ]
+      },
+      jardinagem: {
+        title: "Chaveiro & Jardinagem",
+        icon: "🌿",
+        color: "#10B981",
+        glow: "rgba(16, 185, 129, 0.3)",
+        products: [
+          { name: "Tesoura de Poda Profissional By-Pass Inox", oldPrice: "R$ 85,00", price: "R$ 54,90", discount: "-35%", img: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Kit Gazuas Chaveiro Abertura de Fechaduras", oldPrice: "R$ 140,00", price: "R$ 89,90", discount: "-35%", img: "https://images.unsplash.com/photo-1584992236310-6edddc08acff?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Aparador de Cerca Viva Elétrico 500W", oldPrice: "R$ 350,00", price: "R$ 229,90", discount: "-34%", img: "https://images.unsplash.com/photo-1592417817098-8f3d6eb12765?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Grafite em Pó Spray Lubrificante Fechaduras", oldPrice: "R$ 30,00", price: "R$ 18,90", discount: "-37%", img: "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Mangueira Expansível Mágica 30m com Esguicho", oldPrice: "R$ 110,00", price: "R$ 69,90", discount: "-36%", img: "https://images.unsplash.com/photo-1523301343968-6a6ebf63c672?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Cadeado Segredo Tetra Chave 50mm Latão", oldPrice: "R$ 75,00", price: "R$ 48,90", discount: "-34%", img: "https://images.unsplash.com/photo-1558002038-1055907df827?w=400&q=80", link: "https://SEU_LINK_AFILIADO" }
+        ]
+      },
+      eletrica: {
+        title: "Serviços de Elétrica",
+        icon: "⚡",
+        color: "#FF3B30",
+        glow: "rgba(255, 59, 48, 0.3)",
+        products: [
+          { name: "Alicate Decapador e Crimpador Automático", oldPrice: "R$ 98,00", price: "R$ 64,90", discount: "-33%", img: "https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Multímetro Digital True RMS Autorrange", oldPrice: "R$ 180,00", price: "R$ 119,90", discount: "-33%", img: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Alicate Amperímetro Digital até 600A", oldPrice: "R$ 210,00", price: "R$ 139,90", discount: "-33%", img: "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Caneta Detectora de Tensão Sem Contato NCV", oldPrice: "R$ 45,00", price: "R$ 28,90", discount: "-35%", img: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Passa Fio Profissional 15m com Alma de Aço", oldPrice: "R$ 60,00", price: "R$ 38,90", discount: "-35%", img: "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Fita Isolante Autofusão 19mm x 5m Alta Tensão", oldPrice: "R$ 35,00", price: "R$ 21,90", discount: "-37%", img: "https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?w=400&q=80", link: "https://SEU_LINK_AFILIADO" }
+        ]
+      },
+      pintura: {
+        title: "Serviços de Pintura",
+        icon: "🎨",
+        color: "#B026FF",
+        glow: "rgba(176, 38, 255, 0.3)",
+        products: [
+          { name: "Pistola de Pintura Pulverizadora Electric 500W", oldPrice: "R$ 290,00", price: "R$ 189,90", discount: "-34%", img: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Rolo Antigota 23cm com Extensor Telescópico", oldPrice: "R$ 85,00", price: "R$ 54,90", discount: "-35%", img: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Fita Crepe Azul de Precisão 24mm x 50m (3 Unid)", oldPrice: "R$ 55,00", price: "R$ 34,90", discount: "-36%", img: "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Kit Trinchas Macias Cerda Sintética 5 Peças", oldPrice: "R$ 48,00", price: "R$ 29,90", discount: "-37%", img: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Lixadeira Orbital Elétrica 220W para Parede", oldPrice: "R$ 240,00", price: "R$ 159,90", discount: "-33%", img: "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400&q=80", link: "https://SEU_LINK_AFILIADO" },
+          { name: "Bandeja de Tinta Profissional Reforçada 4 Litros", oldPrice: "R$ 35,00", price: "R$ 21,90", discount: "-37%", img: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&q=80", link: "https://SEU_LINK_AFILIADO" }
+        ]
+      }
+    };
+
+    let currentCategoryKey = 'pedreiro';
+
+    // RENDERIZAR PRODUTOS DA HOME
+    function renderHomeProducts(catKey) {
+      const category = storeData[catKey];
+      const grid = document.getElementById('mainProductsGrid');
+      
+      // Mostra os primeiros 4 na Home
+      const displayProducts = category.products.slice(0, 4);
+      
+      grid.innerHTML = displayProducts.map(p => `
+        <div class="product-card">
+          <div class="discount-badge">${p.discount}</div>
+          <div class="product-img-wrap">
+            <img src="${p.img}" alt="${p.name}" loading="lazy">
+          </div>
+          <div class="product-category-tag">${category.title}</div>
+          <div class="product-name">${p.name}</div>
+          <div class="rating">★★★★★ <span>(4.9)</span></div>
+          <div class="price-container">
+            <span class="old-price">${p.oldPrice}</span>
+            <span class="current-price">${p.price}</span>
+          </div>
+          <a href="${p.link}" target="_blank" rel="noopener" class="btn-buy">Ver Oferta</a>
+        </div>
+      `).join('');
+    }
+
+    // MUDAR TEMA E CORES DINAMICAMENTE
+    function switchTheme(catKey, chipElement) {
+      currentCategoryKey = catKey;
+      const cat = storeData[catKey];
+
+      // Atualiza chips ativos
+      document.querySelectorAll('.cat-chip').forEach(el => el.classList.remove('active'));
+      chipElement.classList.add('active');
+
+      // Atualiza Variáveis CSS no root
+      document.documentElement.style.setProperty('--accent', cat.color);
+      document.documentElement.style.setProperty('--accent-glow', cat.glow);
+
+      // Atualiza textos do Header e Banner
+      document.getElementById('brandBadge').innerHTML = cat.icon;
+      document.getElementById('heroTag').innerText = `SELEÇÃO ${cat.title.toUpperCase()}`;
+      document.getElementById('heroTitle').innerText = `Equipamentos de ${cat.title}`;
+      document.getElementById('sectionTitle').innerText = `Populares em ${cat.title}`;
+
+      // Re-renderiza a Home com a nova categoria
+      renderHomeProducts(catKey);
+    }
+
+    // ABRIR JANELA SOBREPOSTA (BOTTOM SHEET MODAL) COM OS 6 PRODUTOS
+    function openModalCurrent() {
+      const cat = storeData[currentCategoryKey];
+      const modal = document.getElementById('sheetModal');
+      
+      modal.setAttribute('data-theme', currentCategoryKey);
+      document.getElementById('modalIcon').innerText = cat.icon;
+      document.getElementById('modalCategoryTitle').innerText = cat.title;
+
+      const modalGrid = document.getElementById('modalProductsGrid');
+      
+      // Renderiza TODOS OS 6 PRODUTOS
+      modalGrid.innerHTML = cat.products.map(p => `
+        <div class="product-card">
+          <div class="discount-badge">${p.discount}</div>
+          <div class="product-img-wrap">
+            <img src="${p.img}" alt="${p.name}" loading="lazy">
+          </div>
+          <div class="product-name">${p.name}</div>
+          <div class="price-container">
+            <span class="old-price">${p.oldPrice}</span>
+            <span class="current-price">${p.price}</span>
+          </div>
+          <a href="${p.link}" target="_blank" rel="noopener" class="btn-buy btn-buy-modal">Ver Oferta</a>
+        </div>
+      `).join('');
+
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('sheetModal').classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    function closeModalOnBackdrop(e) {
+      if (e.target.classList.contains('sheet-overlay')) {
+        closeModal();
       }
     }
 
-    // Função para fechar a janela modal
-    function closeWindow(modalId) {
-      const modal = document.getElementById(modalId);
-      if (modal) {
-        modal.classList.remove('active');
-        document.body.style.overflow = 'auto'; // Reativa o scroll no fundo
-      }
-    }
-
-    // Fecha se clicar no fundo escuro fora da janela
-    function closeWindowOnBackdrop(event, modalId) {
-      if (event.target.classList.contains('modal-overlay')) {
-        closeWindow(modalId);
-      }
-    }
-
-    // Suporte para fechar com a tecla ESC
-    document.addEventListener('keydown', function(event) {
-      if (event.key === 'Escape') {
-        const activeModals = document.querySelectorAll('.modal-overlay.active');
-        activeModals.forEach(modal => {
-          closeWindow(modal.id);
-        });
-      }
-    });
+    // INICIALIZA O APP
+    window.onload = () => {
+      renderHomeProducts('pedreiro');
+    };
   </script>
 </body>
 </html>
